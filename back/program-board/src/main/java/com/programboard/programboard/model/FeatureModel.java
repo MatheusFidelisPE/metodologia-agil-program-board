@@ -17,6 +17,7 @@ public class FeatureModel implements Serializable {
     private String hypothesis;
     private String acceptanceCriteria;
 
+
     public UUID getIdFeature() {
         return idFeature;
     }
