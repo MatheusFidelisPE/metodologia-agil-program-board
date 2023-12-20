@@ -58,7 +58,7 @@ public class FeatureController {
         if(feature.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Feature not found.");
         }
-        feature.get().add(linkTo(methodOn(FeatureController.class).getAllProducts()).withRel("Features List"));
+        feature.get().add(linkTo(methodOn(FeatureController.class).getAllFeatures()).withRel("Features List"));
         return ResponseEntity.status(HttpStatus.OK).body(feature.get());
     }
 }

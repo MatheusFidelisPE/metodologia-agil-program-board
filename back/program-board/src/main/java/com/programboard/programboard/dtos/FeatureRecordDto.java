@@ -4,5 +4,5 @@ import jakarta.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
 
-public record FeatureRecordDto(@NotBlank String title, @NotBlank String hypothesis, @NotBlank String acceptanceCriteria, @NotNull String priority, Timestamp valueDate) {
+public record FeatureRecordDto(@NotBlank String title, @NotBlank String hypothesis, @NotBlank String acceptanceCriteria, @NotNull Integer priority, Timestamp valueDate) {
 }
