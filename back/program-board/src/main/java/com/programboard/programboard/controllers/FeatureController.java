@@ -43,4 +43,12 @@ public class FeatureController {
         List<FeatureModel> featuresList = featureRepository.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(featuresList);
     }
+    @GetMapping("/program-board/features/{id}")
+    ResponseEntity<Object> getOneFeature(@PathVariable(value = "id") UUID id) {
+        Optional<FeatureModel> feature = featureRepository.findById(id);
+        if(feature.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Feature not found.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(feature.get());
+    }
 }
