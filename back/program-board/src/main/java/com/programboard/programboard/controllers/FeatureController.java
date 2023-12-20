@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 public class FeatureController {
 
@@ -41,6 +44,12 @@ public class FeatureController {
     @GetMapping("/program-board/features")
     ResponseEntity<List<FeatureModel>> getAllFeatures() {
         List<FeatureModel> featuresList = featureRepository.findAll();
+        if(!featuresList.isEmpty()) {
+            for(FeatureModel featureModel : featuresList) {
+                UUID id = featureModel.getIdFeature();
+                featureModel.add(linkTo(methodOn(FeatureController.class).getOneFeature(id)).withSelfRel());
+            }
+        }
         return ResponseEntity.status(HttpStatus.OK).body(featuresList);
     }
     @GetMapping("/program-board/features/{id}")
