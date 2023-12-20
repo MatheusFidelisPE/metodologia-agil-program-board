@@ -17,7 +17,7 @@ public class FeatureController {
     FeatureRepository featureRepository;
 
     @PostMapping("/programboard/features")
-    public ResponseEntity<FeatureModel> saveFeature(@RequestBody @Valid FeatureRecordDto featureRecordDto)
+    public ResponseEntity<FeatureModel> saveFeature(@RequestBody @Valid FeatureRecordDto featureRecordDto);
     var featureModel = new FeatureModel();
     BeanUtils.copyProperties(featureRecordDto, featureModel);
     return ResponseEntity.status(HttpStatus.CREATED).body(featureRepository.save(featureModel));

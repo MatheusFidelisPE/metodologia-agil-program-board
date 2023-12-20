@@ -22,10 +22,6 @@ public class FeatureModel implements Serializable {
         return idFeature;
     }
 
-    public void setIdFeature(UUID idFeature) {
-        this.idFeature = idFeature;
-    }
-
     public String getTitle() {
         return title;
     }
