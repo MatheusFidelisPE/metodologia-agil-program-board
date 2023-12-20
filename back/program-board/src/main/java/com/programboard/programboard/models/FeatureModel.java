@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +20,15 @@ public class FeatureModel extends RepresentationModel<FeatureModel> implements S
     private String hypothesis;
     private String acceptanceCriteria;
     private Integer priority;
+    private Timestamp valueDate;
+
+    public Timestamp getValueDate() {
+        return valueDate;
+    }
+
+    public void setValueDate(Timestamp valueDate) {
+        this.valueDate = valueDate;
+    }
 
     public UUID getIdFeature() {
         return idFeature;
