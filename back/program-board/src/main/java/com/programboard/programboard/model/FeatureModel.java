@@ -1,13 +1,16 @@
 package com.programboard.programboard.model;
 
+
 import jakarta.persistence.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
-@Table(name="TB_FEATURES")
-public class FeatureModel implements Serializable {
+@Table(name = "TB_Features")
+public class FeatureModel extends RepresentationModel<FeatureModel> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -16,10 +19,23 @@ public class FeatureModel implements Serializable {
     private String title;
     private String hypothesis;
     private String acceptanceCriteria;
+    private Integer priority;
+    private Timestamp valueDate;
 
+    public Timestamp getValueDate() {
+        return valueDate;
+    }
+
+    public void setValueDate(Timestamp valueDate) {
+        this.valueDate = valueDate;
+    }
 
     public UUID getIdFeature() {
         return idFeature;
+    }
+
+    public void setIdFeature(UUID idFeature) {
+        this.idFeature = idFeature;
     }
 
     public String getTitle() {
@@ -44,5 +60,13 @@ public class FeatureModel implements Serializable {
 
     public void setAcceptanceCriteria(String acceptanceCriteria) {
         this.acceptanceCriteria = acceptanceCriteria;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 }
