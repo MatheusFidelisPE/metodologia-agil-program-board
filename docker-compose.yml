@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  frontend:
+    image: programboard/frontend
+    container_name: "frontend"
+    build:
+      context: ./front
+    ports:
+      - 3000:3000
+  backend:
+    image: programboard/backend
+    container_name: "backend"
+    build:
+      context: ./back/program-board
+    ports:
+      - 8080:8080
+  adminer:
+    image: adminer
+    restart: always
+    ports: 
+        - 8080:8080
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: database
+      MYSQL_RANDOM_ROOT_PASSWORD: true
+    ports:
+      - "3306:3306"
+    volumes:
+      - /path/on/host:/var/lib/mysql
+      - ./init:/db/init.d
