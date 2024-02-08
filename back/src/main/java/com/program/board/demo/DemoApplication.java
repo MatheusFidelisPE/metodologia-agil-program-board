@@ -1,13 +1,13 @@
-package com.programboard.programboard;
+package com.program.board.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProgramBoardApplication {
+public class DemoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ProgramBoardApplication.class, args);
+		SpringApplication.run(DemoApplication.class, args);
 	}
 
 }

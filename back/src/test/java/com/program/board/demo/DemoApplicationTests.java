@@ -1,10 +1,10 @@
-package com.programboard.programboard;
+package com.program.board.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ProgramBoardApplicationTests {
+class DemoApplicationTests {
 
 	@Test
 	void contextLoads() {
