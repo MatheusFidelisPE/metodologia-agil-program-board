@@ -17,7 +17,7 @@ import java.util.List;
 public class Feature {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idFeature;
     private String title;
     private String hypothesis;
