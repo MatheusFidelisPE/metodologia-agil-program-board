@@ -4,11 +4,14 @@ import com.program.board.demo.model.Feature;
 import com.program.board.demo.model.dtos.FeatureDto;
 import com.program.board.demo.model.dtos.TaskDto;
 import com.program.board.demo.model.dtos.TeamDto;
+import com.program.board.demo.service.ApiService;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskDecorator;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,32 +24,40 @@ import java.util.UUID;
 @RequestMapping("/api-v1")
 public class ApiController {
 
-    @PostMapping("/feature/create-feature")
+    @Autowired
+    private ApiService apiService;
+
+    @PostMapping(value = "/feature/create-feature", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> saveFeature(@RequestBody FeatureDto featureDto) {
-        return ResponseEntity.ok("ok");
+        apiService.saveFeature(featureDto);
+        return ResponseEntity.ok("OK");
     }
 
     @PutMapping("/feature/update-feature")
     public ResponseEntity<?> updateFeature(@RequestBody FeatureDto featureDto) {
-        return ResponseEntity.ok("ok");
+        apiService.updateFeature(featureDto);
+        return ResponseEntity.ok("");
     }
 
     @GetMapping("/feature")
     ResponseEntity<?> getAllFeatures() {
-        List<Feature> featuresList = null;
-        return ResponseEntity.ok("ok");
+        List<FeatureDto> featuresList = apiService.getAllFeatures();
+        return ResponseEntity.ok(featuresList);
     }
     @GetMapping("/feature/{id}")
     ResponseEntity<?> getOneFeature(@PathVariable(value = "id") Long id) {
-        return ResponseEntity.ok("ok");
+        FeatureDto dto = apiService.getFeatureById(id);
+        return ResponseEntity.ok(dto);
     }
     @DeleteMapping("/feature/delete-feature/{id}")
     ResponseEntity<?> deleteFeature(@PathVariable(value = "id") Long id) {
-        return ResponseEntity.ok("ok");
+        FeatureDto dto = apiService.deleteFeature(id);
+        return ResponseEntity.ok(dto);
     }
 
-    @PostMapping("/team/create-team")
+    @PostMapping(value = "/team/create-team", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> createTeam(@RequestBody TeamDto team){
+        String teste = "";
         return ResponseEntity.ok("ok");
     }
     @GetMapping("/team")

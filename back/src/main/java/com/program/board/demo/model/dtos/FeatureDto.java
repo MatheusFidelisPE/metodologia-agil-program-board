@@ -21,7 +21,7 @@ public class FeatureDto {
     private Integer priority;
     private LocalDate valueDate;
     private Integer effort;
-    private List<Feature> dependencias;
-    private List<Task> task;
+//    private List<Feature> dependencias;
+//    private List<Task> task;
 
 }

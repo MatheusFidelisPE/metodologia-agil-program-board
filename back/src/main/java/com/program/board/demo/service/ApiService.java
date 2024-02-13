@@ -1,10 +1,12 @@
 package com.program.board.demo.service;
 
+import com.program.board.demo.map.Mapping;
 import com.program.board.demo.model.Epic;
 import com.program.board.demo.repository.FeatureRepository;
 import com.program.board.demo.repository.EpicRepository;
 import com.program.board.demo.model.Feature;
 import com.program.board.demo.model.dtos.FeatureDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 
@@ -14,9 +16,13 @@ import java.util.Optional;
 // Regras de negócio
 @Service
 public class ApiService {
+    @Autowired
     private FeatureRepository featureRepository;
+    @Autowired
     private EpicRepository epicRepository;
 
+    @Autowired
+    private Mapping map;
     public List<Epic> getEpics(){
         return epicRepository.findAll();
     }
@@ -29,30 +35,40 @@ public class ApiService {
         return epic.get();
     }
 
-    public Feature saveFeature(FeatureDto featureDto) {
+    public FeatureDto saveFeature(FeatureDto featureDto) {
         var featureModel = new Feature();
         BeanUtils.copyProperties(featureDto, featureModel);
-        return featureRepository.save(featureModel);
+        featureRepository.save(featureModel);
+        return map.featureDto(featureModel);
     }
 
-    public Object updateFeature(Long id, FeatureDto featureDto) {
-        Optional<Feature> feature = featureRepository.findById(id);
+    public Object updateFeature(FeatureDto featureDto) {
+        Optional<Feature> feature = featureRepository.findById(featureDto.getIdFeature());
         if(feature.isEmpty()) {
-            return "Feature not found.";
+            return "NOT FOUND";
         }
         var featureModel = feature.get();
         BeanUtils.copyProperties(featureDto, featureModel);
+
         return featureRepository.save(featureModel);
     }
 
-    public List<Feature> getAllFeatures() {
-        return featureRepository.findAll();
+    public List<FeatureDto> getAllFeatures() {
+        List<Feature> features = featureRepository.findAll();
+        List<FeatureDto> dtos = map.featureDtos(features);
+        return dtos;
     }
-    public Object getFeatureById(Long id) {
+    public FeatureDto getFeatureById(Long id) {
         Optional<Feature> feature = featureRepository.findById(id);
         if(feature.isEmpty()) {
-            return "Feature not found.";
+            return new FeatureDto();
         }
-        return feature.get();
+        return map.featureDto(feature.get());
     }
+    public FeatureDto deleteFeature(Long id ){
+        Feature ft = featureRepository.findById(id).get();
+        featureRepository.deleteById(id);
+        return map.featureDto(ft);
+    }
+
 }
