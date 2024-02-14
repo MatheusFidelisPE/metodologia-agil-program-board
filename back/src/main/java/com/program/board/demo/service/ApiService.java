@@ -2,12 +2,17 @@ package com.program.board.demo.service;
 
 import com.program.board.demo.map.Mapping;
 import com.program.board.demo.model.Epic;
+import com.program.board.demo.model.Team;
+import com.program.board.demo.model.dtos.TeamDto;
 import com.program.board.demo.model.Task;
 import com.program.board.demo.model.dtos.TaskDto;
+
 import com.program.board.demo.repository.FeatureRepository;
 import com.program.board.demo.repository.EpicRepository;
 import com.program.board.demo.model.Feature;
 import com.program.board.demo.model.dtos.FeatureDto;
+
+import com.program.board.demo.repository.TeamRepository;
 import com.program.board.demo.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +32,12 @@ public class ApiService {
     @Autowired
     private Mapping map;
 
+    private TeamRepository teamRepository;
+
+
     @Autowired
     private TaskRepository taskRepository;
+
 
     public List<Epic> getEpics(){
         return epicRepository.findAll();
@@ -77,6 +86,31 @@ public class ApiService {
         featureRepository.deleteById(id);
         return map.featureDto(ft);
     }
+
+    public TeamDto deleteTeam(Long id){
+        Team ett = teamRepository.findById(id).get();
+        teamRepository.deleteById(id);
+
+        return map.teamDto(ett);
+    }
+
+    public TeamDto saveTeam(TeamDto dto){
+        Team ett = new Team();
+        BeanUtils.copyProperties(dto,ett);
+        teamRepository.save(ett);
+        return dto;
+    }
+    public List<TeamDto> getAllTeams(){
+        List<Team> etts = teamRepository.findAll();
+
+        return map.teamToDtos(etts);
+    }
+    public TeamDto getTeamById(Long id){
+        Team ett = teamRepository.findById(id).get();
+        return map.teamDto(ett);
+    }
+
+
     public TaskDto getById(Long id){
         Task ett = taskRepository.findById(id).get();
         return map.taskDto(ett);
@@ -110,4 +144,13 @@ public class ApiService {
         return map.taskDto(tk);
     }
 
+
+    public TeamDto updateTeam(TeamDto team) {
+
+        Team ett = teamRepository.findById(team.getId()).get();
+        BeanUtils.copyProperties(team,ett);
+        teamRepository.save(ett);
+        return team;
+
+    }
 }

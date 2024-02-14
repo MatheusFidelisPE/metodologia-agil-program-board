@@ -1,7 +1,9 @@
 package com.program.board.demo.repository;
 
+import com.program.board.demo.model.Team;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TeamRepository {
+public interface TeamRepository extends JpaRepository<Team, Long> {
 }
