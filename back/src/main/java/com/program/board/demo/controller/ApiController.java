@@ -78,23 +78,23 @@ public class ApiController {
 
     @GetMapping("/task")
     public ResponseEntity<?> getTasks(){
-        return ResponseEntity.ok("Ok");
+        return ResponseEntity.ok(apiService.getAllTasks());
     }
     @GetMapping("/task/{id}")
     public ResponseEntity<?> getTaskById(@PathVariable Long id){
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(apiService.getById(id));
     }
     @PostMapping("/task/create-task")
     public ResponseEntity<?> createTask(@RequestBody TaskDto task){
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(apiService.saveTask(task));
     }
     @PutMapping("/task/alter-task")
     public ResponseEntity<?> alterTask(@RequestBody TaskDto task){
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(apiService.updateTask(task));
     }
     @DeleteMapping("/task/delete-task/{id}")
     public ResponseEntity<?> deleteTask(@PathVariable Long id){
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(apiService.deleteTask(id));
     }
 
 }

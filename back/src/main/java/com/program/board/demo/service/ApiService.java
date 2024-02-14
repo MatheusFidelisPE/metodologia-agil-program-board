@@ -4,11 +4,16 @@ import com.program.board.demo.map.Mapping;
 import com.program.board.demo.model.Epic;
 import com.program.board.demo.model.Team;
 import com.program.board.demo.model.dtos.TeamDto;
+import com.program.board.demo.model.Task;
+import com.program.board.demo.model.dtos.TaskDto;
+
 import com.program.board.demo.repository.FeatureRepository;
 import com.program.board.demo.repository.EpicRepository;
 import com.program.board.demo.model.Feature;
 import com.program.board.demo.model.dtos.FeatureDto;
+
 import com.program.board.demo.repository.TeamRepository;
+import com.program.board.demo.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
@@ -26,8 +31,14 @@ public class ApiService {
 
     @Autowired
     private Mapping map;
-    @Autowired
+
     private TeamRepository teamRepository;
+
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+
     public List<Epic> getEpics(){
         return epicRepository.findAll();
     }
@@ -75,6 +86,7 @@ public class ApiService {
         featureRepository.deleteById(id);
         return map.featureDto(ft);
     }
+
     public TeamDto deleteTeam(Long id){
         Team ett = teamRepository.findById(id).get();
         teamRepository.deleteById(id);
@@ -96,6 +108,40 @@ public class ApiService {
     public TeamDto getTeamById(Long id){
         Team ett = teamRepository.findById(id).get();
         return map.teamDto(ett);
+    }
+
+
+    public TaskDto getById(Long id){
+        Task ett = taskRepository.findById(id).get();
+        return map.taskDto(ett);
+    }
+    public List<TaskDto> getAllTasks(){
+        List<Task> etts = taskRepository.findAll();
+        return map.taskDtos(etts);
+    }
+    public TaskDto updateTask(TaskDto dto){
+        Feature ft = featureRepository.findById(dto.getFeatureId())
+                .orElseThrow();
+        Task ett = taskRepository.findById(dto.getId()).get();
+
+        BeanUtils.copyProperties(dto, ett);
+        ett.setFeature(ft);
+        taskRepository.save(ett);
+        return dto;
+    }
+    public TaskDto saveTask(TaskDto dto){
+        Feature ft = featureRepository.findById(dto.getFeatureId())
+                .orElseThrow();
+        Task tk = new Task();
+        BeanUtils.copyProperties(dto, tk);
+        tk.setFeature(ft);
+        taskRepository.save(tk);
+        return dto;
+    }
+    public TaskDto deleteTask(Long id) {
+        Task tk = taskRepository.findById(id).get();
+        taskRepository.deleteById(id);
+        return map.taskDto(tk);
     }
 
 
