@@ -21,11 +21,11 @@ import java.time.LocalDate;
 public class TaskDto {
 
     private Long id;
-    private Feature feature;
+    private Long featureId;
     private String titulo;
     private String descricao;
     private String dev;
-    private LocalDate conpletitionDeadline;
+    private LocalDate deadLine;
     private Level prioridade;
     private Status status;
     private LocalDate endDate;

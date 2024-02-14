@@ -2,14 +2,12 @@ version: "3.7"
 services:
   frontend:
     image: programboard/frontend
-    container_name: "frontend"
     build:
       context: ./front
     ports:
       - 3000:3000
   backend:
     image: programboard/backend
-    container_name: "backend"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/programboard
     build:
