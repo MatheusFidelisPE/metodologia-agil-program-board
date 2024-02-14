@@ -98,4 +98,8 @@ public class ApiController {
         return ResponseEntity.ok("OK");
     }
 
+    @GetMapping("/feature/mudar-feature-de-sprint/{idsprint}/{idfeature}")
+    public ResponseEntity<?> alterarSprintDeUmaFeature(@PathVariable("idsprint") Long idsprint, @PathVariable("idfeature") Long idfeature){
+        return ResponseEntity.ok(apiService.alterarSprintDeFeature(idsprint, idfeature));
+    }
 }

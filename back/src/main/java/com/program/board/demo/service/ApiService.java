@@ -71,4 +71,12 @@ public class ApiService {
         return map.featureDto(ft);
     }
 
+    public FeatureDto alterarSprintDeFeature(Long idsprint, Long idfeature) {
+        Feature ft = featureRepository.findById(idfeature).get();
+        Sprint spt = sprintRepository.findById(idsprint).get();
+
+        ft.setSprint(spt);
+        featureRepository.save(ft);
+        return map.featureDto(ft);
+    }
 }
