@@ -27,7 +27,9 @@ public class Mapping {
         dto.setHypothesis(ett.getHypothesis());
         dto.setAcceptanceCriteria(ett.getAcceptanceCriteria());
         dto.setValueDate(ett.getValueDate());
-        
+        dto.setIdTime(ett.getTime().getId());
+        dto.setIdSprint(ett.getSprint().getId());
+
         return dto;
 
     }
