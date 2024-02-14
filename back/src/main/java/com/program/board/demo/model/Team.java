@@ -19,6 +19,7 @@ public class Team {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "time", cascade = CascadeType.ALL)
+    private List<Feature> features;
 
 }
