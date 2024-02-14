@@ -34,5 +34,11 @@ public class Feature {
     private List<Feature> dependencias;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "feature", cascade = CascadeType.ALL)
     private List<Task> task;
+    @ManyToOne()
+    private Sprint sprint;
+    @ManyToOne()
+    private Team time;
+
+
 
 }

@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 public class TeamDto {
 
     private Long id;
-    private String nomeTime;
+    private String nome;
 
 }
