@@ -23,5 +23,6 @@ public class FeatureDto {
     private Integer effort;
 //    private List<Feature> dependencias;
 //    private List<Task> task;
-
+    private Long idSprint;
+    private Long idTime;
 }

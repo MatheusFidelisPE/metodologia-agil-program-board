@@ -2,10 +2,13 @@ package com.program.board.demo.service;
 
 import com.program.board.demo.map.Mapping;
 import com.program.board.demo.model.Epic;
+import com.program.board.demo.model.Sprint;
+import com.program.board.demo.model.Team;
 import com.program.board.demo.repository.FeatureRepository;
 import com.program.board.demo.repository.EpicRepository;
 import com.program.board.demo.model.Feature;
 import com.program.board.demo.model.dtos.FeatureDto;
+import com.program.board.demo.repository.SprintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
@@ -23,6 +26,9 @@ public class ApiService {
 
     @Autowired
     private Mapping map;
+
+    @Autowired
+    private SprintRepository sprintRepository;
     public List<Epic> getEpics(){
         return epicRepository.findAll();
     }
@@ -38,6 +44,11 @@ public class ApiService {
     public FeatureDto saveFeature(FeatureDto featureDto) {
         var featureModel = new Feature();
         BeanUtils.copyProperties(featureDto, featureModel);
+        Team tm = teamRepository.findById(featureDto.getIdTime()).get();
+        Sprint spt = sprintRepository.findById(featureDto.getIdSprint()).get();
+        featureModel.setSprint(spt);
+        featureModel.setTime(tm);
+
         featureRepository.save(featureModel);
         return map.featureDto(featureModel);
     }
