@@ -57,45 +57,44 @@ public class ApiController {
 
     @PostMapping(value = "/team/create-team", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> createTeam(@RequestBody TeamDto team){
-        String teste = "";
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(apiService.saveTeam(team));
     }
     @GetMapping("/team")
     ResponseEntity<?> getTeams(){
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(apiService.getAllTeams());
     }
     @GetMapping("/team/{id}")
     ResponseEntity<?> getTeamById(@PathVariable Long id){
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(apiService.getTeamById(id));
     }
     @PutMapping("/team/alter-team")
     public ResponseEntity<?> getTeams(@RequestBody TeamDto team){
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(apiService.updateTeam(team));
     }
     @DeleteMapping("/team/delete-team/{id}")
     public ResponseEntity<?> deleteTeam(@PathVariable Long id){
-        return ResponseEntity.ok(HttpStatus.resolve(200));
+        return ResponseEntity.ok(apiService.deleteTeam(id));
     }
 
     @GetMapping("/task")
     public ResponseEntity<?> getTasks(){
-        return ResponseEntity.ok("Ok");
+        return ResponseEntity.ok(apiService.getAllTasks());
     }
     @GetMapping("/task/{id}")
     public ResponseEntity<?> getTaskById(@PathVariable Long id){
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(apiService.getById(id));
     }
     @PostMapping("/task/create-task")
     public ResponseEntity<?> createTask(@RequestBody TaskDto task){
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(apiService.saveTask(task));
     }
     @PutMapping("/task/alter-task")
     public ResponseEntity<?> alterTask(@RequestBody TaskDto task){
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(apiService.updateTask(task));
     }
     @DeleteMapping("/task/delete-task/{id}")
     public ResponseEntity<?> deleteTask(@PathVariable Long id){
-        return ResponseEntity.ok("OK");
+        return ResponseEntity.ok(apiService.deleteTask(id));
     }
 
     @GetMapping("/feature/tasks-from-feature/{id}")
