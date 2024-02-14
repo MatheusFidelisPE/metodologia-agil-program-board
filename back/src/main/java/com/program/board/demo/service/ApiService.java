@@ -6,6 +6,7 @@ import com.program.board.demo.model.Epic;
 
 import com.program.board.demo.model.Sprint;
 import com.program.board.demo.model.Team;
+import com.program.board.demo.model.dtos.SprintDto;
 import com.program.board.demo.model.dtos.TeamDto;
 import com.program.board.demo.model.Task;
 import com.program.board.demo.model.dtos.TaskDto;
@@ -200,4 +201,11 @@ public class ApiService {
 
     }
 
+    public List<SprintDto> getSprints() {
+
+        List<Sprint> sprints = sprintRepository.findAll();
+
+        return map.sprintDtos(sprints);
+
+    }
 }

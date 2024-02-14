@@ -1,7 +1,9 @@
 package com.program.board.demo.map;
 
 import com.program.board.demo.model.Feature;
+import com.program.board.demo.model.Sprint;
 import com.program.board.demo.model.Team;
+import com.program.board.demo.model.dtos.SprintDto;
 import com.program.board.demo.model.dtos.TeamDto;
 import com.program.board.demo.model.Task;
 import com.program.board.demo.model.dtos.FeatureDto;
@@ -80,5 +82,26 @@ public class Mapping {
         }
         return dtos;
 
+    }
+
+    public List<SprintDto> sprintDtos(List<Sprint> sprints) {
+        List<SprintDto> dtos = new ArrayList<>();
+
+        for(Sprint spt: sprints){
+            dtos.add(this.sprintDto(spt));
+        }
+
+        return dtos;
+    }
+
+    public SprintDto sprintDto(Sprint spt) {
+
+        SprintDto dto = new SprintDto();
+
+        dto.setDataFim(spt.getDataFim());
+        dto.setDataInicio(spt.getDataInicio());
+        dto.setId(spt.getId());
+
+        return dto;
     }
 }
