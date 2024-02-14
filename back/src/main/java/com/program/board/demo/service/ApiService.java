@@ -3,11 +3,13 @@ package com.program.board.demo.service;
 import com.program.board.demo.map.Mapping;
 import com.program.board.demo.model.Epic;
 
+
 import com.program.board.demo.model.Sprint;
 import com.program.board.demo.model.Team;
 import com.program.board.demo.model.dtos.TeamDto;
 import com.program.board.demo.model.Task;
 import com.program.board.demo.model.dtos.TaskDto;
+
 
 
 import com.program.board.demo.repository.FeatureRepository;
@@ -17,8 +19,10 @@ import com.program.board.demo.model.dtos.FeatureDto;
 
 import com.program.board.demo.repository.SprintRepository;
 import com.program.board.demo.repository.TeamRepository;
+
 import com.program.board.demo.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 
@@ -32,6 +36,7 @@ public class ApiService {
     private FeatureRepository featureRepository;
     @Autowired
     private EpicRepository epicRepository;
+
 
     @Autowired
     private Mapping map;
@@ -99,6 +104,12 @@ public class ApiService {
         Feature ft = featureRepository.findById(id).get();
         featureRepository.deleteById(id);
         return map.featureDto(ft);
+    }
+
+
+    public List<TaskDto> getTasksFromFeature(Long id) {
+        List<Task> tasks = taskRepository.findTasksFromFeature(id);
+        return map.taskDtos(tasks);
     }
 
     public TeamDto deleteTeam(Long id){
