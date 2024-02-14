@@ -57,24 +57,23 @@ public class ApiController {
 
     @PostMapping(value = "/team/create-team", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> createTeam(@RequestBody TeamDto team){
-        String teste = "";
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(apiService.saveTeam(team));
     }
     @GetMapping("/team")
     ResponseEntity<?> getTeams(){
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(apiService.getAllTeams());
     }
     @GetMapping("/team/{id}")
     ResponseEntity<?> getTeamById(@PathVariable Long id){
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(apiService.getTeamById(id));
     }
     @PutMapping("/team/alter-team")
     public ResponseEntity<?> getTeams(@RequestBody TeamDto team){
-        return ResponseEntity.ok("ok");
+        return ResponseEntity.ok(apiService.updateTeam(team));
     }
     @DeleteMapping("/team/delete-team/{id}")
     public ResponseEntity<?> deleteTeam(@PathVariable Long id){
-        return ResponseEntity.ok(HttpStatus.resolve(200));
+        return ResponseEntity.ok(apiService.deleteTeam(id));
     }
 
     @GetMapping("/task")

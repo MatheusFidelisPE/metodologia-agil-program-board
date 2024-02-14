@@ -1,7 +1,9 @@
 package com.program.board.demo.map;
 
 import com.program.board.demo.model.Feature;
+import com.program.board.demo.model.Team;
 import com.program.board.demo.model.dtos.FeatureDto;
+import com.program.board.demo.model.dtos.TeamDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -32,5 +34,22 @@ public class Mapping {
         }
         return dtos;
     }
-    
+
+    public List<TeamDto> teamToDtos(List<Team> etts) {
+        List<TeamDto> dtos = new ArrayList<>();
+
+        for(Team ett: etts){
+            dtos.add(this.teamDto(ett));
+        }
+        return dtos;
+    }
+
+    public TeamDto teamDto(Team ett) {
+        TeamDto dto = new TeamDto();
+
+        dto.setId(ett.getId());
+        dto.setNome(ett.getNome());
+
+        return dto;
+    }
 }
