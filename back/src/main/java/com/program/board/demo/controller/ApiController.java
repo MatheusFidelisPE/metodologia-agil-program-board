@@ -97,5 +97,8 @@ public class ApiController {
     public ResponseEntity<?> deleteTask(@PathVariable Long id){
         return ResponseEntity.ok("OK");
     }
-
+    @GetMapping("/mudar-feature-de-time/{idtime}/{idfeature}")
+    public ResponseEntity<?> alterarTimeDeUmaFeature(@PathVariable("idtime") Long idTime, @PathVariable("idfeature")Long idfeature){
+        return ResponseEntity.ok(apiService.alterarTimeDeFeature(idTime, idfeature));
+    }
 }

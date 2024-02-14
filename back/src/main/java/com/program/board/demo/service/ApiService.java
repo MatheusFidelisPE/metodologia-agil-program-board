@@ -2,6 +2,7 @@ package com.program.board.demo.service;
 
 import com.program.board.demo.map.Mapping;
 import com.program.board.demo.model.Epic;
+import com.program.board.demo.model.Team;
 import com.program.board.demo.repository.FeatureRepository;
 import com.program.board.demo.repository.EpicRepository;
 import com.program.board.demo.model.Feature;
@@ -71,4 +72,13 @@ public class ApiService {
         return map.featureDto(ft);
     }
 
+    public FeatureDto alterarTimeDeFeature(Long idTime, Long idfeature) {
+        Feature ft = featureRepository.findById(idfeature).get();
+        Team tm = teamRepository.findById(idTime).get();
+
+        ft.setTime(tm);
+        featureRepository.save(ft);
+        return map.featureDto(ft);
+
+    }
 }
