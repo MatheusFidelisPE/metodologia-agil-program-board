@@ -12,6 +12,7 @@ import com.program.board.demo.model.dtos.TaskDto;
 
 
 
+
 import com.program.board.demo.repository.FeatureRepository;
 import com.program.board.demo.repository.EpicRepository;
 import com.program.board.demo.model.Feature;
@@ -107,6 +108,16 @@ public class ApiService {
     }
 
 
+    public FeatureDto alterarTimeDeFeature(Long idTime, Long idfeature) {
+        Feature ft = featureRepository.findById(idfeature).get();
+        Team tm = teamRepository.findById(idTime).get();
+
+        ft.setTime(tm);
+        featureRepository.save(ft);
+        return map.featureDto(ft);
+    }
+
+
     public List<TaskDto> getTasksFromFeature(Long id) {
         List<Task> tasks = taskRepository.findTasksFromFeature(id);
         return map.taskDtos(tasks);
@@ -176,6 +187,7 @@ public class ApiService {
         BeanUtils.copyProperties(team,ett);
         teamRepository.save(ett);
         return team;
+
 
     }
 }
