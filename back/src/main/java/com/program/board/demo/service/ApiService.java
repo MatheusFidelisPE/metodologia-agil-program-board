@@ -108,6 +108,16 @@ public class ApiService {
     }
 
 
+    public FeatureDto alterarSprintDeFeature(Long idsprint, Long idfeature) {
+        Feature ft = featureRepository.findById(idfeature).get();
+        Sprint spt = sprintRepository.findById(idsprint).get();
+
+        ft.setSprint(spt);
+        featureRepository.save(ft);
+        return map.featureDto(ft);
+    }
+
+
     public FeatureDto alterarTimeDeFeature(Long idTime, Long idfeature) {
         Feature ft = featureRepository.findById(idfeature).get();
         Team tm = teamRepository.findById(idTime).get();
@@ -188,6 +198,6 @@ public class ApiService {
         teamRepository.save(ett);
         return team;
 
-
     }
+
 }

@@ -97,6 +97,11 @@ public class ApiController {
         return ResponseEntity.ok(apiService.deleteTask(id));
     }
 
+
+    @GetMapping("/feature/mudar-feature-de-sprint/{idsprint}/{idfeature}")
+    public ResponseEntity<?> alterarSprintDeUmaFeature(@PathVariable("idsprint") Long idsprint, @PathVariable("idfeature") Long idfeature){
+        return ResponseEntity.ok(apiService.alterarSprintDeFeature(idsprint, idfeature));
+    }
     @GetMapping("/feature/mudar-feature-de-time/{idtime}/{idfeature}")
     public ResponseEntity<?> alterarTimeDeUmaFeature(@PathVariable("idtime") Long idTime, @PathVariable("idfeature")Long idfeature){
         return ResponseEntity.ok(apiService.alterarTimeDeFeature(idTime, idfeature));
@@ -105,6 +110,5 @@ public class ApiController {
     @GetMapping("/feature/tasks-from-feature/{id}")
     public ResponseEntity<?> getTasksFromFeature(@PathVariable Long id){
         return ResponseEntity.ok(apiService.getTasksFromFeature(id));
-
     }
 }
