@@ -47,9 +47,8 @@ public class Mapping {
         dto.setStatus(ett.getStatus());
         dto.setEndDate(ett.getEndDate());
         dto.setNotas(ett.getNotas());
-
+        dto.setFeatureId(ett.getFeature().getIdFeature());
         return dto;
-
 
     }
     public List<TaskDto> taskDtos(List<Task> etts){
