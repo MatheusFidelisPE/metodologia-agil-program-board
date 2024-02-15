@@ -6,6 +6,7 @@ import com.program.board.demo.model.Epic;
 
 import com.program.board.demo.model.Sprint;
 import com.program.board.demo.model.Team;
+import com.program.board.demo.model.dtos.SprintDto;
 import com.program.board.demo.model.dtos.TeamDto;
 import com.program.board.demo.model.Task;
 import com.program.board.demo.model.dtos.TaskDto;
@@ -200,4 +201,30 @@ public class ApiService {
 
     }
 
+    public List<SprintDto> getSprints() {
+
+        List<Sprint> sprints = sprintRepository.findAll();
+
+        return map.sprintDtos(sprints);
+
+    }
+
+    public void criarDependencia(Long idInd, Long idDep) {
+        Feature ind = featureRepository.findById(idInd).get();
+        Feature depd = featureRepository.findById(idDep).get();
+
+        depd.setDependencias(ind);
+
+        featureRepository.save(depd);
+
+    }
+
+    public void deletarDependencia(Long idInd, Long idDep) {
+        Feature ind = featureRepository.findById(idInd).get();
+        Feature depd = featureRepository.findById(idDep).get();
+
+        depd.removeDependencia(ind);
+        featureRepository.save(depd);
+
+    }
 }
