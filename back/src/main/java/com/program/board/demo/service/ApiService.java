@@ -208,4 +208,23 @@ public class ApiService {
         return map.sprintDtos(sprints);
 
     }
+
+    public void criarDependencia(Long idInd, Long idDep) {
+        Feature ind = featureRepository.findById(idInd).get();
+        Feature depd = featureRepository.findById(idDep).get();
+
+        depd.setDependencias(ind);
+
+        featureRepository.save(depd);
+
+    }
+
+    public void deletarDependencia(Long idInd, Long idDep) {
+        Feature ind = featureRepository.findById(idInd).get();
+        Feature depd = featureRepository.findById(idDep).get();
+
+        depd.removeDependencia(ind);
+        featureRepository.save(depd);
+
+    }
 }

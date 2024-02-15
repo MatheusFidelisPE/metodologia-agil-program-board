@@ -114,4 +114,16 @@ public class ApiController {
     public ResponseEntity<?> getSprints(){
         return ResponseEntity.ok(apiService.getSprints());
     }
+
+    @PostMapping("/feature/criar-dependencia/{ind}/{depd}")
+    public ResponseEntity<?> criarDependencia(@PathVariable("ind") Long idInd, @PathVariable("depd") Long idDep){
+        apiService.criarDependencia(idInd, idDep);
+        return ResponseEntity.ok("oK");
+    }
+    @DeleteMapping("/feature/deletar-dependencia/{ind}/{depd}")
+    public ResponseEntity<?> deletarDependencia(@PathVariable("ind") Long idInd, @PathVariable("depd") Long idDep){
+        apiService.deletarDependencia(idInd, idDep);
+        return ResponseEntity.ok("oK");
+
+    }
 }

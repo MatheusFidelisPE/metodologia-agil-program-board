@@ -39,6 +39,13 @@ public class Feature {
     @ManyToOne()
     private Team time;
 
+    public void setDependencias(Feature dpd){
+        this.getDependencias().add(dpd);
+    }
+
+    public void removeDependencia(Feature ind){
+        this.dependencias.remove(ind);
+    }
 
 
 }
