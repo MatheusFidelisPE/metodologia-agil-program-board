@@ -146,4 +146,47 @@ public class ApiServiceTest {
         assertNull(result);
         verify(featureRepository, times(1)).deleteById(1L);
     }
+
+    @Test
+    public void testAlterarSprintDeFeature_WhenFeatureDoesNotExist() {
+        when(featureRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        FeatureDto result = apiService.alterarSprintDeFeature(1L, 1L);
+
+        assertNull(result);
+        verify(featureRepository, never()).save(any(Feature.class));
+    }
+
+    @Test
+    public void testAlterarTimeDeFeature_WhenFeatureDoesNotExist() {
+        when(featureRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        FeatureDto result = apiService.alterarTimeDeFeature(1L, 1L);
+
+        assertNull(result);
+        verify(featureRepository, never()).save(any(Feature.class));
+    }
+
+    @Test
+    public void testGetTasksFromFeature_NoTasksFound() {
+        when(taskRepository.findTasksFromFeature(anyLong())).thenReturn(new ArrayList<>());
+
+        List<TaskDto> result = apiService.getTasksFromFeature(1L);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testUpdateTask_WhenTaskDoesNotExist() {
+        TaskDto taskDto = new TaskDto();
+        taskDto.setId(1L);
+        taskDto.setFeatureId(1L);
+        when(taskRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        TaskDto result = apiService.updateTask(taskDto);
+
+        assertNull(result);
+        verify(taskRepository, never()).save(any(Task.class));
+    }
 }
