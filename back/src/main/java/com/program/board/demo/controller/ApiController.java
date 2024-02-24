@@ -22,6 +22,7 @@ import java.util.UUID;
 // Endpoints da API
 @RestController
 @RequestMapping("/api-v1")
+@CrossOrigin(origins = "http://localhos:3000")
 public class ApiController {
 
     @Autowired
