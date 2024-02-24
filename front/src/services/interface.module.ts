@@ -18,3 +18,15 @@ interface Task {
   dependencies?: Array<Task["id"]>;
   iteration: Iteration["id"];
 }
+
+interface Feature {
+  idFeature: number;
+  title: string;
+  hypothesis: string;
+  acceptanceCriteria: string;
+  priority: number;
+  valueDate: string;
+  effort: number;
+  idSprint: number;
+  idTime: number;
+}

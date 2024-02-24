@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DndContext } from "@dnd-kit/core";
 import { useState } from "react";
 import Xarrow, { Xwrapper, useXarrow } from "react-xarrows";
 import uniqueId from "lodash/uniqueId";
 import Task from "./Task";
 import TaskContainer from "./TaskContainer";
+import api from "@/services/api";
+import moment from "moment";
 
 const Base = () => {
   const updateXarrow = useXarrow();
+  const [features, setFeatures] = useState<Array<Feature>>([]);
   const [iterations, setIterations] = useState<Array<Iteration>>([
     {
       id: "iteration-one",
@@ -134,32 +137,82 @@ const Base = () => {
     updateXarrow();
   };
 
+  const getAllFeatures = () => {
+    api.get("/feature").then(() => console.log());
+    // setFeatures([
+    //   {
+    //     idFeature: 1,
+    //     title: "string",
+    //     hypothesis: "string",
+    //     acceptanceCriteria: "string",
+    //     priority: 0,
+    //     valueDate: "2024-02-18",
+    //     effort: 0,
+    //     idSprint: 1,
+    //     idTime: 1,
+    //   },
+    // ]);
+  };
+
+  useEffect(() => {
+    getAllFeatures();
+  }, []);
+
   return (
     <DndContext
       onDragMove={updateXarrow}
       onDragOver={updateXarrow}
       onDragEnd={handleDragEnd}
     >
-      <div className="h-full w-full p-5">
-        <div className="flex gap-1 flex-col h-full">
-          <div className="flex overflow-auto">
-            Iterações:
-            <pre id="json">{JSON.stringify(iterations, undefined, 2)}</pre>
-            Equipes:
-            <pre id="json">{JSON.stringify(teams, undefined, 2)}</pre>
+      <div className="flex h-full w-full p-5 bg-neutral-100">
+        <div className="h-full bg-white rounded-md shadow-md w-1/4">
+          <div className="font-bold text-lg p-5 pb-0">Features</div>
+            <hr className="my-4 h-0.5 border-t-0 bg-neutral-300 opacity-100 dark:opacity-50" />
+          <div className="w-full h-full flex flex-col flex-wrap overflow-hidden px-2">
+            {features?.map((feature, key) => (
+              <div
+                key={key}
+                className="w-full border-gray-300 border-[1px] rounded-md p-2"
+              >
+                <div className="flex justify-between w-full text-sm font-bold">
+                  <div className="text-green-500">{`F-${feature.idFeature}`}</div>
+                  <div>{feature.priority}</div>
+                </div>
+                <div className="capitalize w-full">{feature.title}</div>
+                <div className="w-full">
+                  <span className="inline-block whitespace-nowrap rounded-lg bg-green-300 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-semibold leading-none">
+                    {`S-${feature.idSprint}`}
+                  </span>
+                </div>
+                <div className="w-full">
+                  <hr className="my-4 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50" />
+                </div>
+                <div className="w-full flex justify-between">
+                  <span className="inline-block whitespace-nowrap border-red-300 border-[1px] rounded-sm px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] leading-none">
+                    0
+                  </span>
+                  <div className="capitalize">
+                    {moment(feature.valueDate).format("MMM D")}
+                  </div>
+                  <div>{feature.valueDate} </div>
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
+        <div className="flex gap-1 flex-col h-full w-full">
           <table className="border-separate border-spacing-2 h-full">
             <thead>
-              <th className="bg-green-300 p-2 min-h-full" />
+              <th className="bg-green-300 p-2" />
               {iterations.map((iteration, key) => (
-                <th className="bg-blue-300 p-2 min-h-full" key={key}>
+                <th className="bg-blue-300 p-2" key={key}>
                   Iteração {key + 1}
                 </th>
               ))}
             </thead>
             <tbody>
               {teams.map((team, key) => (
-                <tr key={key}>
+                <tr key={key} className="h-1/4">
                   <td
                     className="bg-green-300 p-2"
                     width={`${100 / (iterations.length + 1)}%`}
