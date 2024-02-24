@@ -2,6 +2,7 @@ package com.program.board.demo.controller;
 
 import com.program.board.demo.model.Feature;
 import com.program.board.demo.model.dtos.FeatureDto;
+import com.program.board.demo.model.dtos.SprintDto;
 import com.program.board.demo.model.dtos.TaskDto;
 import com.program.board.demo.model.dtos.TeamDto;
 import com.program.board.demo.service.ApiService;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 // Endpoints da API
+@CrossOrigin(origins = "http://localhos:3000")
 @RestController
 @RequestMapping("/api-v1")
 public class ApiController {
