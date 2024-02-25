@@ -11,7 +11,7 @@ const Task: React.FC<any> = ({
   const { setNodeRef } = useDroppable({
     id,
     data: {
-      accepts: ["task"],
+      accepts: ["feature"],
       iterationId,
       teamId,
     },

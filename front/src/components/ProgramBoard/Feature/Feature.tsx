@@ -1,13 +1,13 @@
 import React from "react";
 import { useDraggable } from "@dnd-kit/core";
+import FeatureItem from "@/components/FeatureItem";
 
-const TaskContainer: React.FC<any> = ({ id, label, iterationId, teamId }) => {
+const Feature: React.FC<Feature> = ({ ...props }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id,
+    id: props.idFeature,
     data: {
-      type: "task",
-      iterationId,
-      teamId,
+      type: "feature",
+      ...props,
     },
   });
   const style = transform
@@ -18,16 +18,15 @@ const TaskContainer: React.FC<any> = ({ id, label, iterationId, teamId }) => {
 
   return (
     <div
-      id={id}
+      id={String(props.idFeature)}
       ref={setNodeRef}
-      className="bg-slate-50 p-5"
       style={style}
       {...listeners}
       {...attributes}
     >
-      {label}
+      <FeatureItem {...props} />
     </div>
   );
 };
 
-export default TaskContainer;
+export default Feature;

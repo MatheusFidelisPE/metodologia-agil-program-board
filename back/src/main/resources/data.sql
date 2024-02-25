@@ -6,7 +6,9 @@ INSERT INTO `sprint` (`id`, `data_fim`, `data_inicio`) VALUES
 (5,	NULL,	NULL);
 
 INSERT INTO `team` (`id`, `nome`) VALUES
-(1,	'string');
+(1,	'Time A'),
+(2, 'Time B'),
+(3, 'Time C');
 
 INSERT INTO `feature` (`id_feature`, `acceptance_criteria`, `effort`, `hypothesis`, `priority`, `title`, `value_date`, `sprint_id`, `time_id`) VALUES
 (1,	'string',	0,	'string',	0,	'string',	'2024-02-18',	1,	1),

@@ -1,15 +1,13 @@
 interface Team {
-  id: string;
-  name: string;
-  iterations?: Array<Iteration>;
-  tasks: Array<Task>;
+  id: number;
+  nome: string;
+  features: Array<Feature>;
 }
 
 interface Iteration {
-  id: string;
-  tasks: Array<Task["id"]>;
-  start_at?: string;
-  end_at?: string;
+  id: number;
+  dataInicio: string | null;
+  dataFim: string | null;
 }
 
 interface Task {
@@ -29,4 +27,9 @@ interface Feature {
   effort: number;
   idSprint: number;
   idTime: number;
+}
+
+interface TeamListResponse {
+  id: number;
+  nome: string;
 }
