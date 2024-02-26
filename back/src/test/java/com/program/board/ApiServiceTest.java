@@ -2,6 +2,9 @@ import com.program.board.demo.map.Mapping;
 import com.program.board.demo.model.Feature;
 import com.program.board.demo.model.dtos.FeatureDto;
 import com.program.board.demo.repository.FeatureRepository;
+import com.program.board.demo.model.dtos.*;
+import com.program.board.demo.repository.*;
+import com.program.board.demo.model.*;
 import com.program.board.demo.service.ApiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +26,12 @@ public class ApiServiceTest {
 
     @Mock
     private Mapping mapping;
+
+    @Mock
+    private TaskRepository taskRepository;
+
+    @Mock
+    private TaskDto taskDto;
 
     @InjectMocks
     private ApiService apiService;
