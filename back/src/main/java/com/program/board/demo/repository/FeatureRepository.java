@@ -2,8 +2,16 @@ package com.program.board.demo.repository;
 
 import com.program.board.demo.model.Feature;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface FeatureRepository extends JpaRepository<Feature, Long> {
+    @Query(value = "select * from dependecias;", nativeQuery = true)
+    List<Object[]> getDependencias();
+
+    @Query(value = "select * from dependecias where feature_id = ?1", nativeQuery = true )
+    List<Object[]> getDependenciasById(Long id);
 }

@@ -3,11 +3,8 @@ package com.program.board.demo.map;
 import com.program.board.demo.model.Feature;
 import com.program.board.demo.model.Sprint;
 import com.program.board.demo.model.Team;
-import com.program.board.demo.model.dtos.SprintDto;
-import com.program.board.demo.model.dtos.TeamDto;
+import com.program.board.demo.model.dtos.*;
 import com.program.board.demo.model.Task;
-import com.program.board.demo.model.dtos.FeatureDto;
-import com.program.board.demo.model.dtos.TaskDto;
 
 import org.springframework.stereotype.Component;
 
@@ -105,5 +102,17 @@ public class Mapping {
         dto.setId(spt.getId());
 
         return dto;
+    }
+
+    public List<DependenciaDto> dependenciaToDto(List<Object[]> objs) {
+        List<DependenciaDto> lista = new ArrayList<>();
+
+        for(Object[] o: objs){
+            DependenciaDto dto = new DependenciaDto();
+            dto.setIdDependente(Long.parseLong(o[0].toString()));
+            dto.setIdIndependente(Long.parseLong(o[1].toString()));
+            lista.add(dto);
+        }
+        return lista;
     }
 }
