@@ -1,8 +1,6 @@
 import com.program.board.demo.map.Mapping;
-import com.program.board.demo.model.Epic;
 import com.program.board.demo.model.Feature;
 import com.program.board.demo.model.dtos.FeatureDto;
-import com.program.board.demo.repository.EpicRepository;
 import com.program.board.demo.repository.FeatureRepository;
 import com.program.board.demo.service.ApiService;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,9 +22,6 @@ public class ApiServiceTest {
     private FeatureRepository featureRepository;
 
     @Mock
-    private EpicRepository epicRepository;
-
-    @Mock
     private Mapping mapping;
 
     @InjectMocks
@@ -37,34 +32,6 @@ public class ApiServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    public void testGetEpics() {
-        List<Epic> expectedEpics = new ArrayList<>();
-        when(epicRepository.findAll()).thenReturn(expectedEpics);
-
-        List<Epic> actualEpics = apiService.getEpics();
-
-        assertEquals(expectedEpics, actualEpics);
-    }
-
-    @Test
-    public void testGetEpicById_WhenEpicExists() {
-        Epic expectedEpic = new Epic();
-        when(epicRepository.findById(anyLong())).thenReturn(Optional.of(expectedEpic));
-
-        Object result = apiService.getEpicById(1L);
-
-        assertEquals(expectedEpic, result);
-    }
-
-    @Test
-    public void testGetEpicById_WhenEpicDoesNotExist() {
-        when(epicRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-        Object result = apiService.getEpicById(1L);
-
-        assertEquals("Epic not found.", result);
-    }
 
     @Test
     public void testSaveFeature() {
