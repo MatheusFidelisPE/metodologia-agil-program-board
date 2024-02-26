@@ -15,7 +15,8 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - db
+      db:
+        condition: service_healthy
   adminer:
     image: adminer
     restart: always
@@ -31,4 +32,8 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./init:/db/init.d
+      - ./db/data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10

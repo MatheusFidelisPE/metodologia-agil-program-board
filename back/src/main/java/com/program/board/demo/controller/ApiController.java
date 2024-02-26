@@ -22,6 +22,7 @@ import java.util.UUID;
 // Endpoints da API
 @RestController
 @RequestMapping("/api-v1")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ApiController {
 
     @Autowired
@@ -115,6 +116,14 @@ public class ApiController {
         return ResponseEntity.ok(apiService.getSprints());
     }
 
+    @GetMapping("/feature/get-dependencias")
+    public ResponseEntity<?> getDependencias(){
+        return ResponseEntity.ok(apiService.getDependencias());
+    }
+    @GetMapping("/feature/get-dependencias/{id}")
+    public ResponseEntity<?> getDependencias(@PathVariable Long id){
+        return ResponseEntity.ok(apiService.getDependencia(id));
+    }
     @PostMapping("/feature/criar-dependencia/{ind}/{depd}")
     public ResponseEntity<?> criarDependencia(@PathVariable("ind") Long idInd, @PathVariable("depd") Long idDep){
         apiService.criarDependencia(idInd, idDep);
@@ -126,4 +135,5 @@ public class ApiController {
         return ResponseEntity.ok("oK");
 
     }
+
 }

@@ -1,190 +1,150 @@
-import React from "react";
-import { DndContext } from "@dnd-kit/core";
+import React, { useCallback, useEffect } from "react";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { useState } from "react";
-import Xarrow, { Xwrapper, useXarrow } from "react-xarrows";
+import { Xwrapper, useXarrow } from "react-xarrows";
 import uniqueId from "lodash/uniqueId";
-import Task from "./Task";
-import TaskContainer from "./TaskContainer";
+import FeatureContainer from "./FeatureContainer";
+import Feature from "./Feature";
+import api from "@/services/api";
+import FeatureItem from "../FeatureItem";
+import TaskModal from "../TaskModal";
 
 const Base = () => {
+  const [taskModal, setTaskModalOpen] = React.useState({
+    data: null,
+    open: false,
+  });
+  const handleTaskModalOpen = (task: any) =>
+    setTaskModalOpen({ data: task, open: true });
+  const handleTaskModalClose = () =>
+    setTaskModalOpen({ data: null, open: false });
   const updateXarrow = useXarrow();
-  const [iterations, setIterations] = useState<Array<Iteration>>([
-    {
-      id: "iteration-one",
-      tasks: ["task-one", "task-three"],
-    },
-    {
-      id: "iteration-two",
-      tasks: [],
-    },
-    {
-      id: "iteration-three",
-      tasks: [],
-    },
-    {
-      id: "iteration-four",
-      tasks: ["task-two"],
-    },
-    {
-      id: "iteration-five",
-      tasks: [],
-    },
-    {
-      id: "iteration-six",
-      tasks: [],
-    },
-  ]);
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+  const [features, setFeatures] = useState<Array<Feature>>([]);
+  const [iterations, setIterations] = useState<Array<Iteration>>([]);
+  const [teams, setTeams] = useState<Array<Team>>([]);
 
-  const [teams, setTeams] = useState<Array<Team>>([
-    {
-      id: "team-one",
-      name: "Milestones",
-      tasks: [
-        {
-          label: "Tarefa 1",
-          id: "task-one",
-          dependencies: ["task-two"],
-          iteration: "iteration-one",
-        },
-        {
-          label: "Tarefa 3",
-          id: "task-three",
-          dependencies: [],
-          iteration: "iteration-one",
-        },
-      ],
-    },
-    {
-      id: "team-two",
-      name: "Team 1",
-      tasks: [],
-    },
-    {
-      id: "team-three",
-      name: "Shared Services Team",
-      tasks: [
-        {
-          label: "Tarefa 2",
-          id: "task-two",
-          iteration: "iteration-three",
-        },
-      ],
-    },
-  ]);
-
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = async (event: any) => {
     const { active, over } = event;
 
     if (over && over.data.current.accepts.includes(active.data.current.type)) {
-      const originTaskId = active.id;
+      const originFeatureId = active.id;
       const iterationId = over.data.current.iterationId;
       const teamId = over.data.current.teamId;
-      const originIterationId = active.data.current.iterationId;
-      const originTeamId = active.data.current.teamId;
+      const originIterationId = active.data.current.idSprint;
+      const originTeamId = active.data.current.idTime;
 
-      setIterations((prev) => {
-        const newArray = [...prev];
-        newArray.forEach((item) => {
-          if (item.id === originIterationId) {
-            item.tasks = item.tasks.filter((x) => x !== originTaskId);
-          }
-          if (item.id === iterationId) {
-            item.tasks = [...item.tasks, originTaskId.toString()];
-          }
-        });
-
-        return newArray;
-      });
-
-      setTeams((prev) => {
-        const newArray = [...prev];
-        const originTeamIndex = newArray.findIndex(
-          (x) => x.id === originTeamId
+      if (originTeamId !== teamId) {
+        await api.get(
+          `/feature/mudar-feature-de-time/${teamId}/${originFeatureId}`
         );
-        const destinationTeamIndex = newArray.findIndex((x) => x.id === teamId);
+      }
 
-        if (originTeamIndex !== -1) {
-          const taskToMove = newArray[originTeamIndex].tasks?.find(
-            (x) => x.id.toString() === originTaskId
-          ) as Task;
+      if (originIterationId !== iterationId) {
+        await api.get(
+          `/feature/mudar-feature-de-sprint/${iterationId}/${originFeatureId}`
+        );
+      }
 
-          newArray[originTeamIndex].tasks = newArray[
-            originTeamIndex
-          ].tasks.filter((item) => {
-            if (item.id === originTaskId) {
-              return false;
-            }
-            return true;
-          });
-
-          if (taskToMove) {
-            newArray[destinationTeamIndex].tasks = [
-              ...newArray[destinationTeamIndex].tasks,
-              taskToMove,
-            ];
-
-            taskToMove.iteration = iterationId;
-          }
-        }
-
-        return newArray;
-      });
+      getAllFeatures();
     }
 
     updateXarrow();
   };
+
+  const getAllFeatures = () =>
+    api.get("/feature").then(({ data }) => setFeatures(data));
+
+  const getAllIterations = () =>
+    api.get("/sprint").then(({ data }) => setIterations(data));
+
+  const getProgramBoardData = useCallback(async () => {
+    const { data } = await api.get<Array<Team>>("/team");
+    data?.forEach((team, key) => {
+      team.features = features.filter((x) => x.idTime === team.id) || [];
+    });
+    setTeams(data);
+  }, [JSON.stringify(features)]);
+
+  useEffect(() => {
+    getAllIterations();
+    getAllFeatures();
+  }, []);
+
+  useEffect(() => {
+    getProgramBoardData();
+  }, [getProgramBoardData]);
 
   return (
     <DndContext
       onDragMove={updateXarrow}
       onDragOver={updateXarrow}
       onDragEnd={handleDragEnd}
+      sensors={sensors}
     >
-      <div className="h-full w-full p-5">
-        <div className="flex gap-1 flex-col h-full">
-          <div className="flex overflow-auto">
-            Iterações:
-            <pre id="json">{JSON.stringify(iterations, undefined, 2)}</pre>
-            Equipes:
-            <pre id="json">{JSON.stringify(teams, undefined, 2)}</pre>
+      <div className="flex h-full w-full p-5 bg-neutral-100">
+        <div className="h-full bg-white rounded-md shadow-md w-1/4 flex flex-col overflow-hidden">
+          <div className="font-bold text-lg p-5 pb-0">Features</div>
+          <hr className="my-4 h-0.5 border-t-0 bg-neutral-300 opacity-100 dark:opacity-50" />
+          <div className="w-full flex flex-col overflow-auto px-2 gap-2 flex-1 pb-5">
+            {features?.map((feature, key) => (
+              <FeatureItem
+                key={key}
+                {...feature}
+                showDependency={false}
+                onTaskOpen={handleTaskModalOpen}
+              />
+            ))}
           </div>
+        </div>
+        <div className="flex gap-1 flex-col h-full w-full ">
           <table className="border-separate border-spacing-2 h-full">
             <thead>
-              <th className="bg-green-300 p-2 min-h-full" />
+              <th className="bg-green-300 p-2" />
               {iterations.map((iteration, key) => (
-                <th className="bg-blue-300 p-2 min-h-full" key={key}>
-                  Iteração {key + 1}
+                <th className="bg-blue-300 p-2" key={key}>
+                  Sprint {iteration.id}
                 </th>
               ))}
             </thead>
             <tbody>
               {teams.map((team, key) => (
-                <tr key={key}>
+                <tr key={key} className="h-1/4">
                   <td
                     className="bg-green-300 p-2"
                     width={`${100 / (iterations.length + 1)}%`}
                   >
-                    {team.name}
+                    {team.nome}
                   </td>
                   {iterations?.map((iteration, key) => (
-                    <Task
+                    <FeatureContainer
                       key={key}
-                      id={`task-${team.name}-iteration-${key}`}
+                      id={`feature-${team.nome}-iteration-${key}`}
                       width={`${100 / (iterations.length + 1)}%`}
                       iterationId={iteration.id}
                       teamId={team.id}
                     >
-                      {team.tasks
-                        ?.filter((x) => iteration.tasks.includes(x.id))
-                        ?.map(({ dependencies, ...task }, key) => (
-                          <React.Fragment key={key}>
-                            <TaskContainer
-                              {...task}
-                              iterationId={iteration.id}
-                              teamId={team.id}
+                      {team.features
+                        ?.filter((x) => x.idSprint === iteration.id)
+                        ?.map(({ ...feature }, key) => (
+                          <React.Fragment key={uniqueId()}>
+                            <Feature
+                              {...feature}
                               key={key}
+                              onTaskOpen={handleTaskModalOpen}
                             />
-                            {dependencies?.map((dependency) => (
+                            {/* {dependencies?.map((dependency) => (
                               <Xarrow
                                 key={uniqueId()}
                                 start={task.id}
@@ -192,10 +152,10 @@ const Base = () => {
                                 showHead={false}
                                 lineColor="red"
                               />
-                            ))}
+                            ))} */}
                           </React.Fragment>
                         ))}
-                    </Task>
+                    </FeatureContainer>
                   ))}
                 </tr>
               ))}
@@ -203,6 +163,11 @@ const Base = () => {
           </table>
         </div>
       </div>
+      <TaskModal
+        open={taskModal.open}
+        onClose={handleTaskModalClose}
+        data={taskModal.data}
+      />
     </DndContext>
   );
 };

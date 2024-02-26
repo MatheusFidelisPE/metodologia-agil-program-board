@@ -1,20 +1,41 @@
 interface Team {
-  id: string;
-  name: string;
-  iterations?: Array<Iteration>;
-  tasks: Array<Task>;
+  id: number;
+  nome: string;
+  features: Array<Feature>;
 }
 
 interface Iteration {
-  id: string;
-  tasks: Array<Task["id"]>;
-  start_at?: string;
-  end_at?: string;
+  id: number;
+  dataInicio: string | null;
+  dataFim: string | null;
 }
 
 interface Task {
-  label: string;
-  id: string;
-  dependencies?: Array<Task["id"]>;
-  iteration: Iteration["id"];
+  id: 1;
+  featureId: 1;
+  titulo: string;
+  descricao: string;
+  dev: string;
+  deadLine: string;
+  prioridade: string;
+  status: string;
+  endDate: string;
+  notas: string;
+}
+
+interface Feature {
+  idFeature: number;
+  title: string;
+  hypothesis: string;
+  acceptanceCriteria: string;
+  priority: number;
+  valueDate: string;
+  effort: number;
+  idSprint: number;
+  idTime: number;
+}
+
+interface TeamListResponse {
+  id: number;
+  nome: string;
 }

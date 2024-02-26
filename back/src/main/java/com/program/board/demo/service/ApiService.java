@@ -6,18 +6,13 @@ import com.program.board.demo.model.Epic;
 
 import com.program.board.demo.model.Sprint;
 import com.program.board.demo.model.Team;
-import com.program.board.demo.model.dtos.SprintDto;
-import com.program.board.demo.model.dtos.TeamDto;
+import com.program.board.demo.model.dtos.*;
 import com.program.board.demo.model.Task;
-import com.program.board.demo.model.dtos.TaskDto;
-
-
 
 
 import com.program.board.demo.repository.FeatureRepository;
 import com.program.board.demo.repository.EpicRepository;
 import com.program.board.demo.model.Feature;
-import com.program.board.demo.model.dtos.FeatureDto;
 
 import com.program.board.demo.repository.SprintRepository;
 import com.program.board.demo.repository.TeamRepository;
@@ -226,5 +221,17 @@ public class ApiService {
         depd.removeDependencia(ind);
         featureRepository.save(depd);
 
+    }
+
+    public List<DependenciaDto> getDependencias() {
+        List<Object[]> objs = featureRepository.getDependencias();
+        List<DependenciaDto> dependenciaDtos = map.dependenciaToDto(objs);
+        return dependenciaDtos;
+    }
+
+    public List<DependenciaDto> getDependencia(Long id) {
+        List<Object[]> objs = featureRepository.getDependenciasById(id);
+        List<DependenciaDto> dependenciaDtos = map.dependenciaToDto(objs);
+        return dependenciaDtos;
     }
 }
