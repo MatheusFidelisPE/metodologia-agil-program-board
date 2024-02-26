@@ -1,20 +1,38 @@
 import React, { useCallback, useEffect } from "react";
-import { DndContext } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { useState } from "react";
-import Xarrow, { Xwrapper, useXarrow } from "react-xarrows";
+import { Xwrapper, useXarrow } from "react-xarrows";
 import uniqueId from "lodash/uniqueId";
 import FeatureContainer from "./FeatureContainer";
 import Feature from "./Feature";
 import api from "@/services/api";
-import { IoIosArrowForward } from "react-icons/io";
-import moment from "moment";
 import FeatureItem from "../FeatureItem";
+import TaskModal from "../TaskModal";
 
 const Base = () => {
+  const [taskModal, setTaskModalOpen] = React.useState({
+    data: null,
+    open: false,
+  });
+  const handleTaskModalOpen = (task: any) =>
+    setTaskModalOpen({ data: task, open: true });
+  const handleTaskModalClose = () =>
+    setTaskModalOpen({ data: null, open: false });
   const updateXarrow = useXarrow();
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
   const [features, setFeatures] = useState<Array<Feature>>([]);
   const [iterations, setIterations] = useState<Array<Iteration>>([]);
-
   const [teams, setTeams] = useState<Array<Team>>([]);
 
   const handleDragEnd = async (event: any) => {
@@ -27,15 +45,19 @@ const Base = () => {
       const originIterationId = active.data.current.idSprint;
       const originTeamId = active.data.current.idTime;
 
-      if(originTeamId !== teamId) {
-        await api.get(`/feature/mudar-feature-de-time/${teamId}/${originFeatureId}`)
+      if (originTeamId !== teamId) {
+        await api.get(
+          `/feature/mudar-feature-de-time/${teamId}/${originFeatureId}`
+        );
       }
 
-      if(originIterationId !== iterationId) {
-        await api.get(`/feature/mudar-feature-de-sprint/${iterationId}/${originFeatureId}`)
+      if (originIterationId !== iterationId) {
+        await api.get(
+          `/feature/mudar-feature-de-sprint/${iterationId}/${originFeatureId}`
+        );
       }
 
-      getAllFeatures()
+      getAllFeatures();
     }
 
     updateXarrow();
@@ -58,7 +80,7 @@ const Base = () => {
   useEffect(() => {
     getAllIterations();
     getAllFeatures();
-  }, [])
+  }, []);
 
   useEffect(() => {
     getProgramBoardData();
@@ -69,6 +91,7 @@ const Base = () => {
       onDragMove={updateXarrow}
       onDragOver={updateXarrow}
       onDragEnd={handleDragEnd}
+      sensors={sensors}
     >
       <div className="flex h-full w-full p-5 bg-neutral-100">
         <div className="h-full bg-white rounded-md shadow-md w-1/4 flex flex-col overflow-hidden">
@@ -76,7 +99,12 @@ const Base = () => {
           <hr className="my-4 h-0.5 border-t-0 bg-neutral-300 opacity-100 dark:opacity-50" />
           <div className="w-full flex flex-col overflow-auto px-2 gap-2 flex-1 pb-5">
             {features?.map((feature, key) => (
-              <FeatureItem key={key} {...feature} />
+              <FeatureItem
+                key={key}
+                {...feature}
+                showDependency={false}
+                onTaskOpen={handleTaskModalOpen}
+              />
             ))}
           </div>
         </div>
@@ -111,7 +139,11 @@ const Base = () => {
                         ?.filter((x) => x.idSprint === iteration.id)
                         ?.map(({ ...feature }, key) => (
                           <React.Fragment key={uniqueId()}>
-                            <Feature {...feature} key={key} />
+                            <Feature
+                              {...feature}
+                              key={key}
+                              onTaskOpen={handleTaskModalOpen}
+                            />
                             {/* {dependencies?.map((dependency) => (
                               <Xarrow
                                 key={uniqueId()}
@@ -131,6 +163,11 @@ const Base = () => {
           </table>
         </div>
       </div>
+      <TaskModal
+        open={taskModal.open}
+        onClose={handleTaskModalClose}
+        data={taskModal.data}
+      />
     </DndContext>
   );
 };

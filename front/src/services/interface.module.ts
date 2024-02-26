@@ -11,10 +11,16 @@ interface Iteration {
 }
 
 interface Task {
-  label: string;
-  id: string;
-  dependencies?: Array<Task["id"]>;
-  iteration: Iteration["id"];
+  id: 1;
+  featureId: 1;
+  titulo: string;
+  descricao: string;
+  dev: string;
+  deadLine: string;
+  prioridade: string;
+  status: string;
+  endDate: string;
+  notas: string;
 }
 
 interface Feature {
