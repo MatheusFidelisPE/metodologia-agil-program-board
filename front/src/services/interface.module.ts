@@ -10,6 +10,11 @@ interface Iteration {
   dataFim: string | null;
 }
 
+interface Dependency {
+  idIndependente: number;
+  idDependente: number;
+}
+
 interface Task {
   id: 1;
   featureId: 1;
