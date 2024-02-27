@@ -3,16 +3,13 @@ import {
   Box,
   Button,
   FormControl,
-  FormHelperText,
   Grid,
-  Input,
   InputLabel,
   MenuItem,
   Modal,
   OutlinedInput,
   Select,
 } from "@mui/material";
-import { differenceWith, isEqual, last } from "lodash";
 import React, { useEffect, useState } from "react";
 
 const style = {
@@ -28,7 +25,7 @@ const style = {
 
 const FeatureModal: React.FC<any> = (props) => {
   const [editedData, setEdited] = useState<any>({});
-  const [dependencies, setDependencies] = useState<Array<Dependency>>({});
+  const [dependencies, setDependencies] = useState<Array<Dependency>>([]);
   const { data, features = [], refresh, getAllDependencies } = props;
 
   useEffect(() => {
@@ -37,7 +34,7 @@ const FeatureModal: React.FC<any> = (props) => {
         (x: Dependency) => data && x && x.idIndependente === data?.idFeature
       )
     );
-  }, [JSON.stringify(props.dependencies)]);
+  }, [JSON.stringify(props.dependencies), JSON.stringify(data)]);
 
   const handleEdit = (property: string) => (e: any) =>
     setEdited((prev: any) => ({
@@ -61,25 +58,33 @@ const FeatureModal: React.FC<any> = (props) => {
   };
 
   const handleDependency = async (e: any) => {
-    console.log(e.target.value)
-    Array(e.target.value).map(async (dependencyId) => {
-      if (!dependencies.find((x) => x.idDependente === dependencyId)) {
+    const value =
+      typeof e.target.value === "string"
+        ? String(e.target.value).split(",")
+        : e.target.value;
+
+    value.map(async (dependencyId: number) => {
+      if (
+        dependencyId &&
+        !dependencies.find((x) => x.idDependente === dependencyId)
+      ) {
         await api.post(
           `/feature/criar-dependencia/${data.idFeature}/${dependencyId}`
         );
       }
     });
-    
-    await getAllDependencies();
 
-    console.log('dependencies')
     dependencies?.map(async (x) => {
-      if (!Array(e.target.value).includes(x.idDependente)) {
+      if (!value.includes(x.idDependente)) {
         await api.delete(
           `/feature/deletar-dependencia/${data.idFeature}/${x.idDependente}`
         );
       }
     });
+
+    setTimeout(() => {
+      getAllDependencies();
+    }, 1000);
   };
 
   return (
@@ -132,8 +137,6 @@ const FeatureModal: React.FC<any> = (props) => {
                   />
                 </FormControl>
               </Grid>
-              {JSON.stringify(props.dependencies)}
-              {JSON.stringify({ f: data?.idFeature })}
               <Grid item sm={6}>
                 <FormControl sx={{ width: "100%" }}>
                   <InputLabel id="demo-multiple-name-label">
@@ -148,14 +151,16 @@ const FeatureModal: React.FC<any> = (props) => {
                     renderValue={(selected) => selected.join(", ")}
                     input={<OutlinedInput label="Name" />}
                   >
-                    {features.map((feature: Feature) => (
-                      <MenuItem
-                        key={feature.idFeature}
-                        value={feature.idFeature}
-                      >
-                        {`F-${feature.idFeature} ${feature.title}`}
-                      </MenuItem>
-                    ))}
+                    {features
+                      ?.filter((x: Feature) => x.idFeature !== data?.idFeature)
+                      .map((feature: Feature) => (
+                        <MenuItem
+                          key={feature.idFeature}
+                          value={feature.idFeature}
+                        >
+                          {`F-${feature.idFeature} ${feature.title}`}
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </Grid>
