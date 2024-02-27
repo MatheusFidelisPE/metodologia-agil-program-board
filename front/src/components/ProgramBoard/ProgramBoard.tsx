@@ -13,9 +13,15 @@ import Feature from "./Feature";
 import api from "@/services/api";
 import FeatureItem from "../FeatureItem";
 import TaskModal from "../TaskModal";
+import Xarrow from "react-xarrows";
+import FeatureModal from "../FeatureModal";
 
 const Base = () => {
   const [taskModal, setTaskModalOpen] = React.useState({
+    data: null,
+    open: false,
+  });
+  const [featureModal, setFeatureModal] = React.useState({
     data: null,
     open: false,
   });
@@ -23,6 +29,10 @@ const Base = () => {
     setTaskModalOpen({ data: task, open: true });
   const handleTaskModalClose = () =>
     setTaskModalOpen({ data: null, open: false });
+  const handleFeatureModalOpen = (feature: any) =>
+    setFeatureModal({ data: feature, open: true });
+  const handleFeatureModalClose = () =>
+    setFeatureModal({ data: null, open: false });
   const updateXarrow = useXarrow();
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -32,6 +42,7 @@ const Base = () => {
     })
   );
   const [features, setFeatures] = useState<Array<Feature>>([]);
+  const [dependencies, setDependencies] = useState<Array<Dependency>>([]);
   const [iterations, setIterations] = useState<Array<Iteration>>([]);
   const [teams, setTeams] = useState<Array<Team>>([]);
 
@@ -66,6 +77,11 @@ const Base = () => {
   const getAllFeatures = () =>
     api.get("/feature").then(({ data }) => setFeatures(data));
 
+  const getAllDependencies = () =>
+    api
+      .get("/feature/get-dependencias")
+      .then(({ data }) => setDependencies(data));
+
   const getAllIterations = () =>
     api.get("/sprint").then(({ data }) => setIterations(data));
 
@@ -77,9 +93,15 @@ const Base = () => {
     setTeams(data);
   }, [JSON.stringify(features)]);
 
+  const refreshFeatureModal = () => {
+    getAllFeatures();
+    getAllDependencies();
+  };
+
   useEffect(() => {
     getAllIterations();
     getAllFeatures();
+    getAllDependencies();
   }, []);
 
   useEffect(() => {
@@ -93,7 +115,7 @@ const Base = () => {
       onDragEnd={handleDragEnd}
       sensors={sensors}
     >
-      <div className="flex h-full w-full p-5 bg-neutral-100">
+      <div className="flex h-full w-full p-5 bg-neutral-100 overflow-auto">
         <div className="h-full bg-white rounded-md shadow-md w-1/4 flex flex-col overflow-hidden">
           <div className="font-bold text-lg p-5 pb-0">Features</div>
           <hr className="my-4 h-0.5 border-t-0 bg-neutral-300 opacity-100 dark:opacity-50" />
@@ -104,6 +126,7 @@ const Base = () => {
                 {...feature}
                 showDependency={false}
                 onTaskOpen={handleTaskModalOpen}
+                onFeatureOpen={handleFeatureModalOpen}
               />
             ))}
           </div>
@@ -143,16 +166,8 @@ const Base = () => {
                               {...feature}
                               key={key}
                               onTaskOpen={handleTaskModalOpen}
+                              onFeatureOpen={handleFeatureModalOpen}
                             />
-                            {/* {dependencies?.map((dependency) => (
-                              <Xarrow
-                                key={uniqueId()}
-                                start={task.id}
-                                end={dependency}
-                                showHead={false}
-                                lineColor="red"
-                              />
-                            ))} */}
                           </React.Fragment>
                         ))}
                     </FeatureContainer>
@@ -163,10 +178,28 @@ const Base = () => {
           </table>
         </div>
       </div>
+      {dependencies?.map((dependency) => (
+        <Xarrow
+          key={uniqueId()}
+          start={String(dependency.idIndependente)}
+          end={String(dependency.idDependente)}
+          showHead={false}
+          lineColor="red"
+        />
+      ))}
       <TaskModal
         open={taskModal.open}
         onClose={handleTaskModalClose}
         data={taskModal.data}
+      />
+      <FeatureModal
+        open={featureModal.open}
+        onClose={handleFeatureModalClose}
+        data={featureModal.data}
+        refresh={refreshFeatureModal}
+        dependencies={dependencies}
+        features={features}
+        getAllDependencies={getAllDependencies}
       />
     </DndContext>
   );
