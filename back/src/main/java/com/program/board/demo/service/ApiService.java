@@ -82,6 +82,12 @@ public class ApiService {
         var featureModel = feature.get();
         BeanUtils.copyProperties(featureDto, featureModel);
 
+        Sprint spt = sprintRepository.findById(featureDto.getIdSprint()).get();
+        Team tm = teamRepository.findById(featureDto.getIdTime()).get();
+
+        featureModel.setSprint(spt);
+        featureModel.setTime(tm);
+
         return featureRepository.save(featureModel);
     }
 
