@@ -15,6 +15,7 @@ import FeatureItem from "../FeatureItem";
 import TaskModal from "../TaskModal";
 import Xarrow from "react-xarrows";
 import FeatureModal from "../FeatureModal";
+import { Button } from "@mui/material";
 
 const Base = () => {
   const [taskModal, setTaskModalOpen] = React.useState({
@@ -24,15 +25,16 @@ const Base = () => {
   const [featureModal, setFeatureModal] = React.useState({
     data: null,
     open: false,
+    isProgramBoard: false
   });
   const handleTaskModalOpen = (task: any) =>
     setTaskModalOpen({ data: task, open: true });
   const handleTaskModalClose = () =>
     setTaskModalOpen({ data: null, open: false });
-  const handleFeatureModalOpen = (feature: any) =>
-    setFeatureModal({ data: feature, open: true });
+  const handleFeatureModalOpen = (feature: any, isProgramBoard = true) =>
+    setFeatureModal({ data: feature, open: true, isProgramBoard });
   const handleFeatureModalClose = () =>
-    setFeatureModal({ data: null, open: false });
+    setFeatureModal({ data: null, open: false, isProgramBoard: true });
   const updateXarrow = useXarrow();
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -120,13 +122,18 @@ const Base = () => {
           <div className="font-bold text-lg p-5 pb-0">Features</div>
           <hr className="my-4 h-0.5 border-t-0 bg-neutral-300 opacity-100 dark:opacity-50" />
           <div className="w-full flex flex-col overflow-auto px-2 gap-2 flex-1 pb-5">
+            <div className="w-full">
+              <Button onClick={() => handleFeatureModalOpen({}, false)}>
+                Criar Feature
+              </Button>
+            </div>
             {features?.map((feature, key) => (
               <FeatureItem
                 key={key}
                 {...feature}
                 showDependency={false}
                 onTaskOpen={handleTaskModalOpen}
-                onFeatureOpen={handleFeatureModalOpen}
+                onFeatureOpen={(feature: any) => handleFeatureModalOpen(feature, false)}
               />
             ))}
           </div>
@@ -199,6 +206,9 @@ const Base = () => {
         refresh={refreshFeatureModal}
         dependencies={dependencies}
         features={features}
+        teams={teams}
+        iterations={iterations}
+        isProgramBoard={featureModal.isProgramBoard}
         getAllDependencies={getAllDependencies}
       />
     </DndContext>

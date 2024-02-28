@@ -74,7 +74,7 @@ const FeatureItem: React.FC<any> = ({
               0
             </span>
             <div className="capitalize">
-              {moment(feature.valueDate).format("MMM D")}
+              {moment(feature.valueDate).isValid() && moment(feature.valueDate).format("MMM D")}
             </div>
             <div>
               {!isExpanded ? <IoIosArrowForward /> : <IoIosArrowDown />}

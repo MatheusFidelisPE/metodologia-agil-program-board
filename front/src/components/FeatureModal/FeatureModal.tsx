@@ -26,7 +26,15 @@ const style = {
 const FeatureModal: React.FC<any> = (props) => {
   const [editedData, setEdited] = useState<any>({});
   const [dependencies, setDependencies] = useState<Array<Dependency>>([]);
-  const { data, features = [], refresh, getAllDependencies } = props;
+  const {
+    features = [],
+    teams = [],
+    iterations = [],
+    refresh,
+    isProgramBoard = true,
+    getAllDependencies,
+  } = props;
+  const data = props.data === null ? {} : props.data;
 
   useEffect(() => {
     setDependencies(
@@ -51,6 +59,13 @@ const FeatureModal: React.FC<any> = (props) => {
 
     if (!!body.idFeature) {
       await api.put("/feature/update-feature", body).then(() => {
+        setTimeout(() => {
+          refresh();
+        }, 1000);
+        props.onClose();
+      });
+    } else {
+      await api.post("/feature/create-feature", body).then(() => {
         refresh();
         props.onClose();
       });
@@ -90,53 +105,53 @@ const FeatureModal: React.FC<any> = (props) => {
   return (
     <Modal {...props}>
       <Box sx={style}>
-        {data && (
-          <form autoComplete="off" onSubmit={handleSubmit}>
-            <Grid container spacing={5}>
-              <Grid item sm={6}>
-                <FormControl>
-                  <InputLabel>Título</InputLabel>
-                  <OutlinedInput
-                    defaultValue={data.title}
-                    key={data.title}
-                    onChange={handleEdit("title")}
-                    label="Título"
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item sm={6}>
-                <FormControl>
-                  <InputLabel>Hypothesis</InputLabel>
-                  <OutlinedInput
-                    defaultValue={data.hypothesis}
-                    key={data.hypothesis}
-                    label="Hypothesis"
-                    onChange={handleEdit("hypothesis")}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item sm={6}>
-                <FormControl>
-                  <InputLabel>Critério de Aceitação</InputLabel>
-                  <OutlinedInput
-                    defaultValue={data.acceptanceCriteria}
-                    key={data.acceptanceCriteria}
-                    onChange={handleEdit("acceptanceCriteria")}
-                    label="Critério de Aceitação"
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item sm={6}>
-                <FormControl>
-                  <InputLabel>Esforço</InputLabel>
-                  <OutlinedInput
-                    defaultValue={data.effort}
-                    key={data.effort}
-                    onChange={handleEdit("effort")}
-                    label="Esforço"
-                  />
-                </FormControl>
-              </Grid>
+        <form autoComplete="off" onSubmit={handleSubmit}>
+          <Grid container spacing={5}>
+            <Grid item sm={6}>
+              <FormControl>
+                <InputLabel>Título</InputLabel>
+                <OutlinedInput
+                  defaultValue={data.title}
+                  key={data.title}
+                  onChange={handleEdit("title")}
+                  label="Título"
+                />
+              </FormControl>
+            </Grid>
+            <Grid item sm={6}>
+              <FormControl>
+                <InputLabel>Hypothesis</InputLabel>
+                <OutlinedInput
+                  defaultValue={data.hypothesis}
+                  key={data.hypothesis}
+                  label="Hypothesis"
+                  onChange={handleEdit("hypothesis")}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item sm={6}>
+              <FormControl>
+                <InputLabel>Critério de Aceitação</InputLabel>
+                <OutlinedInput
+                  defaultValue={data.acceptanceCriteria}
+                  key={data.acceptanceCriteria}
+                  onChange={handleEdit("acceptanceCriteria")}
+                  label="Critério de Aceitação"
+                />
+              </FormControl>
+            </Grid>
+            <Grid item sm={6}>
+              <FormControl>
+                <InputLabel>Esforço</InputLabel>
+                <OutlinedInput
+                  defaultValue={data.effort}
+                  key={data.effort}
+                  onChange={handleEdit("effort")}
+                  label="Esforço"
+                />
+              </FormControl>
+            </Grid>
+            {isProgramBoard && (
               <Grid item sm={6}>
                 <FormControl sx={{ width: "100%" }}>
                   <InputLabel id="demo-multiple-name-label">
@@ -149,7 +164,7 @@ const FeatureModal: React.FC<any> = (props) => {
                     value={dependencies?.map((x) => x.idDependente)}
                     onChange={handleDependency}
                     renderValue={(selected) => selected.join(", ")}
-                    input={<OutlinedInput label="Name" />}
+                    input={<OutlinedInput label="Dependências" />}
                   >
                     {features
                       ?.filter((x: Feature) => x.idFeature !== data?.idFeature)
@@ -164,12 +179,46 @@ const FeatureModal: React.FC<any> = (props) => {
                   </Select>
                 </FormControl>
               </Grid>
+            )}
+            <Grid item sm={6}>
+              <FormControl sx={{ width: "100%" }}>
+                <InputLabel id="demo-multiple-name-label">Time</InputLabel>
+                <Select
+                  defaultValue={data.idTime}
+                  key={data.idTime}
+                  onChange={handleEdit("idTime")}
+                  input={<OutlinedInput label="Time" />}
+                >
+                  {teams.map((team: Team) => (
+                    <MenuItem key={team.id} value={team.id}>
+                      {team.nome}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
-            <FormControl className="mt-4">
-              <Button type="submit">Salvar</Button>
-            </FormControl>
-          </form>
-        )}
+            <Grid item sm={6}>
+              <FormControl sx={{ width: "100%" }}>
+                <InputLabel id="demo-multiple-name-label">Sprint</InputLabel>
+                <Select
+                  defaultValue={data.idSprint}
+                  key={data.idSprint}
+                  onChange={handleEdit("idSprint")}
+                  input={<OutlinedInput label="Sprint" />}
+                >
+                  {iterations.map((iteration: Iteration) => (
+                    <MenuItem key={iteration.id} value={iteration.id}>
+                      Sprint - {iteration.id}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <FormControl className="mt-4">
+            <Button type="submit">Salvar</Button>
+          </FormControl>
+        </form>
       </Box>
     </Modal>
   );
